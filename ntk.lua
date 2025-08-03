@@ -692,24 +692,26 @@ end
 
 function drawFrameToBuffer(screen, frame, x, y, af)
 	local offsetWidth = frame.width
-	if af then
-		frame = frame[af]
-	else
-		frame = frame[1]
-	end
-	if x + offsetWidth > screens[screen].x then
-		offsetWidth = offsetWidth - ((x + offsetWidth) - screens[screen].x)
-	end
-	for i,v in ipairs(frame) do
-		local row = screens[screen].renderedFrame[(y + i) - 1]
-		if row then
-			local tempd = string.sub(v.d, 1, offsetWidth)
-			row.d = subInString(row.d, tempd, x)
-			local tempc = string.sub(v.c, 1, offsetWidth)
-			row.c = subInString(row.c, tempc, x)
-			local tempb = string.sub(v.b, 1, offsetWidth)
-			row.b = subInString(row.b, tempb, x)
-			row.r = true
+	if offsetWidth then
+		if af then
+			frame = frame[af]
+		else
+			frame = frame[1]
+		end
+		if x + offsetWidth > screens[screen].x then
+			offsetWidth = offsetWidth - ((x + offsetWidth) - screens[screen].x)
+		end
+		for i,v in ipairs(frame) do
+			local row = screens[screen].renderedFrame[(y + i) - 1]
+			if row then
+				local tempd = string.sub(v.d, 1, offsetWidth)
+				row.d = subInString(row.d, tempd, x)
+				local tempc = string.sub(v.c, 1, offsetWidth)
+				row.c = subInString(row.c, tempc, x)
+				local tempb = string.sub(v.b, 1, offsetWidth)
+				row.b = subInString(row.b, tempb, x)
+				row.r = true
+			end
 		end
 	end
 end
@@ -839,7 +841,7 @@ function ntk.init(screensList)
 	end
 end
 
-function ntk.tick(event, e1, e2, e3, e4)
+function ntk.event(event, e1, e2, e3, e4)
 	if event == "frametimer" then
 		if renderUpdate then
 			for _,v in ipairs(elementOrder) do
